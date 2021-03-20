@@ -7,9 +7,11 @@ import './app.css';
 import ErrorButton from '../error-button/error-button';
 import ErrorIndicator from '../error-indicator';
 import PeoplePage from '../people-page/people-page';
-import PersonDetails from '../person-details';
+import ItemDetails from '../item-details';
 import ItemList from '../item-list';
 import SwapiService from '../../services/swapi-service';
+import ErrorBoundary from '../error-boundry/error-boundry';
+import Row from '../row';
 
 
 export default class App extends Component {
@@ -39,20 +41,24 @@ export default class App extends Component {
 
     const planetBlock = this.state.showRandomPlanet ? <RandomPlanet /> : null;
 
+    const { getPerson, getStarship, getPersonImage, getStarshipImage } = this.swapiService;
+
+    const personDetails = (
+      <ItemDetails itemId={11} getData={getPerson} getImageUrl={getPersonImage}/>
+    );
+
+    const starshipDetails = (
+      <ItemDetails itemId={5} getData={getStarship} getImageUrl={getStarshipImage}/>
+    );
+
     return (
-      <div className="container">
-        <Header />
-        { planetBlock }
+      <ErrorBoundary>
+        <div className="container">
+          <Header />
 
-        <div className="row mb2 button-row">
-          <div className="col">
-          <button className="toggle-planet btn btn-warning btn-lg" onClick={this.toggleRandomPlanet}>Toggle Random Planet</button>
-            <ErrorButton />
-            </div>
+          <Row left={personDetails} right={starshipDetails} />
         </div>
-
-        <PeoplePage />
-      </div>
+      </ErrorBoundary>
     );
   }
 };
